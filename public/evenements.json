@@ -1,0 +1,48 @@
+[
+{
+"id": 1,
+"titre": "Concert acoustique de Youssou Junior",
+"categorie": "concert",
+"lieu_nom": "Theatre National Daniel Sorano",
+"date_debut": "2026-06-12T20:00:00+00:00",
+"prix": 5000,
+"image_url": "https://placehold.co/400x250/1a3a5c/fff?text=Concert"
+},
+{
+"id": 2,
+"titre": "Expo photo : Dakar la nuit",
+"categorie": "expo",
+"lieu_nom": "Galerie le Manege",
+"date_debut": "2026-06-15T18:00:00+00:00",
+"prix": 0,
+"image_url": "https://placehold.co/400x250/ea7d2b/fff?text=Expo"
+},
+{
+"id": 3,
+"titre": "Conference",
+"categorie": "conference",
+"lieu_nom": "Theatre National Daniel Sorano",
+"date_debut": "2026-06-12T20:00:00+00:00",
+"prix": 5000,
+"image_url": "https://placehold.co/400x250/1a3a5c/fff?text=Conference"
+},
+{
+"id": 4,
+"titre": "Atelier",
+"categorie": "atelier",
+"lieu_nom": "Galerie le Manege",
+"date_debut": "2026-06-15T18:00:00+00:00",
+"prix": 0,
+"image_url": "https://placehold.co/400x250/ea7d2b/fff?text=Atelier"
+},
+{
+"id": 5,
+"titre": "Soutenance",
+"categorie": "soutenance",
+"lieu_nom": "Galerie le Manege",
+"date_debut": "2026-06-15T18:00:00+00:00",
+"prix": 0,
+"image_url": "https://placehold.co/400x250/ea7d2b/fff?text=Soutenance"
+}
+
+]
