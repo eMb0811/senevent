@@ -7,7 +7,7 @@ const App = () => {
   const charger = async () => {
     setChargement(true);
     try {
-      const reponse = await fetch("/evenements.json");
+      const reponse = await fetch("/senevent/evenements.json");
       const data = await reponse.json();
       setEvenements(data);
     } catch (error) {
