@@ -26,7 +26,7 @@ const App = () => {
       </button>
 
       {evenements.map(ev => (
-        <EvenementCarte key={ev.id} ev={ev} />
+        <EvenementCarte key={ev.id} ev={ev} afficherDetails={true} />
       ))}
     </div>
   );

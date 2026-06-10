@@ -1,5 +1,5 @@
 
-const EvenementCarte = ({ ev }) => {
+const EvenementCarte = ({ ev, afficherDetails }) => {
   const prix = ev.prix === 0 ? "Gratuit" : `${ev.prix} FCFA`;
 
   return (
@@ -18,11 +18,12 @@ const EvenementCarte = ({ ev }) => {
       <p style={{ margin: "0.2rem 0", color: "#555" }}>
         Catégorie : {ev.categorie}
       </p>
+	{afficherDetails && (
 
       <p style={{ margin: "0.2rem 0", color: "#555" }}>
         Lieu : {ev.lieu_nom}
       </p>
-
+	)}
       <p
         style={{
           margin: "0.2rem 0",
