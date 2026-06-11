@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import EvenementCarte from "./components/EvenementCarte";
 import SearchBar from "./components/SearchBar";
 import styles from "./App.module.css";
-
+import EtatChargement from "./components/EtatChargement";
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
@@ -52,20 +52,11 @@ return (
       SenEvent — Événements à Dakar
     </h1>
 
-    {chargement && (
-      <p className={styles.message}>
-        Chargement des événements...
-      </p>
-    )}
-
-    {erreur && (
-      <div className={styles.erreur}>
-        <p>Erreur : {erreur}</p>
-        <button className={styles.bouton} onClick={charger}>
-          Réessayer
-        </button>
-      </div>
-    )}
+    <EtatChargement
+      chargement={chargement}
+      erreur={erreur}
+      onReessayer={charger}
+    />
 
     {!chargement && !erreur && (
       <>
@@ -79,7 +70,7 @@ return (
         </p>
 
         {evenementsFiltres.length === 0 ? (
-          <p className={styles.message}>
+          <p className={styles.messageVide}>
             Aucun événement ne correspond.
           </p>
         ) : (
@@ -95,7 +86,5 @@ return (
     )}
   </div>
 );
-
-};
-
+}
 export default App;

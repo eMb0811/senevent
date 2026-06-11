@@ -56,3 +56,9 @@
   margin-top: 0.5rem;
   cursor: pointer;
 }
+.messageVide {
+text-align: center;
+color: #888;
+font-style: italic;
+padding: 1rem;
+}
