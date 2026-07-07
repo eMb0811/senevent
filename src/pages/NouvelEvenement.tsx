@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styles from "./NouvelEvenement.module.css";
+import { useNavigate } from "react-router-dom";
 
 const NouvelEvenement = ({ onAjouter }) => {
   const [titre, setTitre] = useState("");
@@ -7,7 +8,7 @@ const NouvelEvenement = ({ onAjouter }) => {
   const [lieu, setLieu] = useState("");
   const [prix, setPrix] = useState(0);
   const [erreurs, setErreurs] = useState({});
-
+  const navigate = useNavigate();
   const valider = () => {
     const e = {};
     if (titre.trim().length < 3) {
@@ -45,12 +46,12 @@ const NouvelEvenement = ({ onAjouter }) => {
     };
 
     onAjouter(nouvel);
-
+    navigate("/");
     // Optionnel : Réinitialiser le formulaire après soumission réussie
-    setTitre("");
-    setLieu("");
-    setPrix(0);
-    setCategorie("concert");
+    // setTitre("");
+    // setLieu("");
+    // setPrix(0);
+    // setCategorie("concert");
   };
 
   return (
