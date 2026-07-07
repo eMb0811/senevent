@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import EvenementCarte from "../components/EvenementCarte";
 import SearchBar from "../components/SearchBar";
 import EtatChargement from "../components/EtatChargement";
-//import styles from "./Accueil.module.css";
+import styles from "./Accueil.module.css";
 
 const Accueil = ({ evenements, chargement, erreur, onReessayer }) => {
   const [recherche, setRecherche] = useState("");
