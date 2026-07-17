@@ -3,6 +3,7 @@ import EvenementCarte from "./components/EvenementCarte";
 import SearchBar from "./components/SearchBar";
 import styles from "./App.module.css";
 import EtatChargement from "./components/EtatChargement";
+import { supabase } from "./lib/supabase";
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
@@ -10,26 +11,25 @@ const App = () => {
   const [erreur, setErreur] = useState(null);
   const [recherche, setRecherche] = useState("");
 
-  const charger = async () => {
+const charger = async () => {
+  try {
     setChargement(true);
     setErreur(null);
 
-    try {
-      const reponse = await fetch("/evenements.json");
+    const { data, error } = await supabase
+      .from("evenements")
+      .select("*")
+      .order("date_debut", { ascending: true });
 
-      if (!reponse.ok) {
-        throw new Error(`Erreur HTTP ${reponse.status}`);
-      }
+    if (error) throw error;
 
-      const data = await reponse.json();
-      setEvenements(data);
-    } catch (e) {
-      setErreur(e.message);
-    } finally {
-      setChargement(false);
-    }
-  };
-
+    setEvenements(data);
+  } catch (e) {
+    setErreur(e.message);
+  } finally {
+    setChargement(false);
+  }
+};
   useEffect(() => {
     charger();
   }, []);
