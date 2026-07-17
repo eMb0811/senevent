@@ -1,15 +1,40 @@
 import { useState, useEffect } from "react";
 import EvenementCarte from "./components/EvenementCarte";
 import SearchBar from "./components/SearchBar";
-import styles from "./App.module.css";
+import styles from "./pages/Accueil.module.css";
 import EtatChargement from "./components/EtatChargement";
 import { supabase } from "./lib/supabase";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Accueil from "./pages/Accueil";
+import NouvelEvenement from "./pages/NouvelEvenement";
+import Detail from "./pages/Detail";
+import Auth from "./pages/Auth";
+import NavBar from "./components/NavBar";
 
 const App = () => {
   const [evenements, setEvenements] = useState([]);
   const [chargement, setChargement] = useState(true);
   const [erreur, setErreur] = useState(null);
-  const [recherche, setRecherche] = useState("");
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    // Récupérer la session actuelle
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+
+    // Écouter les changements de session
+    const { data: subscription } =
+      supabase.auth.onAuthStateChange(
+        (_event, newSession) => {
+          setSession(newSession);
+        }
+      );
+
+    return () => {
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
 
 const charger = async () => {
   try {
@@ -34,57 +59,53 @@ const charger = async () => {
     charger();
   }, []);
 
-  const evenementsFiltres = evenements.filter((ev) =>
-    ev.titre?.toLowerCase().includes(recherche.toLowerCase())
-  );
+  const ajouterEvenement = (nouvel) => {
+    setEvenements((precedents) => [
+      nouvel,
+      ...precedents,
+    ]);
+  };
 
-useEffect(() => {
-  if (evenementsFiltres.length > 0) {
-    document.title = `(${evenementsFiltres.length}) SenEvent`;
-  } else {
-    document.title = "SenEvent";
-  }
-}, [evenementsFiltres.length]);
+  return (
+    <BrowserRouter>
+      <NavBar session={session} />
 
-return (
-  <div className={styles.container}>
-    <h1 className={styles.titre}>
-      SenEvent — Événements à Dakar
-    </h1>
-
-    <EtatChargement
-      chargement={chargement}
-      erreur={erreur}
-      onReessayer={charger}
-    />
-
-    {!chargement && !erreur && (
-      <>
-        <SearchBar
-          recherche={recherche}
-          onRecherche={setRecherche}
+      <Routes>
+        <Route
+          path="/"
+          element={
+            <Accueil
+              evenements={evenements}
+              chargement={chargement}
+              erreur={erreur}
+              onReessayer={charger}
+            />
+          }
         />
 
-        <p className={styles.compteur}>
-          {evenementsFiltres.length} événement(s) trouvé(s)
-        </p>
-
-        {evenementsFiltres.length === 0 ? (
-          <p className={styles.messageVide}>
-            Aucun événement ne correspond.
-          </p>
-        ) : (
-          evenementsFiltres.map((ev) => (
-            <EvenementCarte
-              key={ev.id}
-              ev={ev}
-              afficherDetails={true}
+        <Route
+          path="/nouveau"
+          element={
+            <NouvelEvenement
+              onAjouter={ajouterEvenement}
             />
-          ))
-        )}
-      </>
-    )}
-  </div>
-);
-}
+          }
+        />
+
+        <Route
+          path="/evenement/:id"
+          element={
+            <Detail evenements={evenements} />
+          }
+        />
+
+        <Route
+          path="/auth"
+          element={<Auth />}
+        />
+      </Routes>
+    </BrowserRouter>
+  );
+};
+
 export default App;
