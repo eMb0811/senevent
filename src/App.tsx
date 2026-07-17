@@ -59,12 +59,6 @@ const charger = async () => {
     charger();
   }, []);
 
-  const ajouterEvenement = (nouvel) => {
-    setEvenements((precedents) => [
-      nouvel,
-      ...precedents,
-    ]);
-  };
 
   return (
     <BrowserRouter>
@@ -87,7 +81,7 @@ const charger = async () => {
           path="/nouveau"
           element={
             <NouvelEvenement
-              onAjouter={ajouterEvenement}
+              onAjoutReussi={charger}
             />
           }
         />

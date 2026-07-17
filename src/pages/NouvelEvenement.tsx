@@ -1,59 +1,81 @@
 import { useState } from "react";
-import styles from "./NouvelEvenement.module.css";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+import styles from "./NouvelEvenement.module.css";
 
-const NouvelEvenement = ({ onAjouter }) => {
+const NouvelEvenement = ({ onAjoutReussi }) => {
   const [titre, setTitre] = useState("");
   const [categorie, setCategorie] = useState("concert");
   const [lieu, setLieu] = useState("");
   const [prix, setPrix] = useState(0);
   const [erreurs, setErreurs] = useState({});
+  const [erreurServeur, setErreurServeur] = useState(null);
+  const [enCours, setEnCours] = useState(false);
+
   const navigate = useNavigate();
+
   const valider = () => {
     const e = {};
+
     if (titre.trim().length < 3) {
       e.titre = "Le titre doit contenir au moins 3 caractères.";
     }
+
     if (lieu.trim().length < 2) {
       e.lieu = "Le lieu est requis.";
     }
+
     if (prix < 0) {
       e.prix = "Le prix ne peut pas être négatif.";
     }
+
     return e;
   };
 
-  const soumettre = (event) => {
+  const soumettre = async (event) => {
     event.preventDefault();
+    setErreurServeur(null);
+
     const erreursTrouvees = valider();
-    
+
     if (Object.keys(erreursTrouvees).length > 0) {
       setErreurs(erreursTrouvees);
       return;
     }
 
-    // Réinitialisation des erreurs si la validation passe
-    setErreurs({});
+    setEnCours(true);
 
-    const nouvel = {
-      id: Date.now(),
-      titre: titre.trim(),
-      categorie,
-      lieu_nom: lieu.trim(),
-      prix: Number(prix),
-      date_debut: new Date().toISOString(),
-      image_url: `https://placehold.co/400x250/1a3a5c/fff?text=${categorie}`,
-    };
+    // Récupérer l'utilisateur connecté
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
 
-    onAjouter(nouvel);
-    navigate("/");
-    // Optionnel : Réinitialiser le formulaire après soumission réussie
-    // setTitre("");
-    // setLieu("");
-    // setPrix(0);
-    // setCategorie("concert");
+    if (!user) {
+      setErreurServeur("Vous devez être connecté.");
+      setEnCours(false);
+      return;
+    }
+
+    const { error } = await supabase
+      .from("evenements")
+      .insert({
+        titre: titre.trim(),
+        categorie,
+        lieu_nom: lieu.trim(),
+        prix: Number(prix),
+        date_debut: new Date().toISOString(),
+        organisateur_id: user.id,
+      });
+
+    setEnCours(false);
+
+    if (error) {
+      setErreurServeur(error.message);
+    } else {
+      onAjoutReussi(); // demande à App de recharger la liste
+      navigate("/");
+    }
   };
-
   return (
     <form className={styles.form} onSubmit={soumettre}>
       <h2>Ajouter un événement</h2>
@@ -99,10 +121,19 @@ const NouvelEvenement = ({ onAjouter }) => {
         />
         {erreurs.prix && <span className={styles.erreur}>{erreurs.prix}</span>}
       </label>
+{erreurServeur && (
+  <p className={styles.erreur}>
+    Erreur : {erreurServeur}
+  </p>
+)}
 
-      <button type="submit" className={styles.bouton}>
-        Ajouter
-      </button>
+<button
+  type="submit"
+  disabled={enCours}
+  className={styles.bouton}
+>
+  {enCours ? "Envoi..." : "Ajouter"}
+</button>
     </form>
   );
 };
