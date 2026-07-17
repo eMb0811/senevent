@@ -70,6 +70,8 @@ const supprimer = async () => {
         <dt>Prix</dt>
         <dd className={styles.prix}>{prix}</dd>
       </dl>
+      <dt>Organiser par </dt>
+     <dd> {evenement.profiles ? evenement.profiles.nom : "Equipe SenEvent"}</dd>
      <BoutonInscription evenementId={evenement.id} session={session} />
      {session &&
   session.user.id === evenement.organisateur_id && (
