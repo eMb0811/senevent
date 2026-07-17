@@ -41,8 +41,8 @@ const Detail = ({ evenements }) => {
         <dt>Lieu</dt>
         <dd>{evenement.lieu_nom}</dd>
         
-        <dt>Date</dt>
-        <dd>{date}</dd>
+        
+        
         
         <dt>Prix</dt>
         <dd className={styles.prix}>{prix}</dd>
