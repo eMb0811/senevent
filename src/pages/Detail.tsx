@@ -1,7 +1,8 @@
 import { useParams, useNavigate, Link } from "react-router-dom";
 import styles from "./Detail.module.css";
+import BoutonInscription from "../components/BoutonInscription";
 
-const Detail = ({ evenements }) => {
+const Detail = ({ evenements, session }) => {
   const { id } = useParams();
   const navigate = useNavigate();
   
@@ -47,6 +48,7 @@ const Detail = ({ evenements }) => {
         <dt>Prix</dt>
         <dd className={styles.prix}>{prix}</dd>
       </dl>
+     <BoutonInscription evenementId={evenement.id} session={session} />
     </div>
   );
 };

@@ -89,7 +89,7 @@ const charger = async () => {
         <Route
           path="/evenement/:id"
           element={
-            <Detail evenements={evenements} />
+            <Detail evenements={evenements} session={session} />
           }
         />
 
