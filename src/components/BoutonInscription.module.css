@@ -1,0 +1,35 @@
+.info {
+  color: #6b7280;
+  font-size: 0.95rem;
+  font-style: italic;
+}
+
+.inscrire {
+  background-color: #16a34a;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.inscrire:hover {
+  background-color: #15803d;
+}
+
+.desinscrire {
+  background-color: #ea7d2b;
+  color: white;
+  border: none;
+  padding: 0.7rem 1.2rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.desinscrire:hover {
+  background-color: #d96c1a;
+}
