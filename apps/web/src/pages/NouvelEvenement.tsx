@@ -8,6 +8,7 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
   const [categorie, setCategorie] = useState("concert");
   const [lieu, setLieu] = useState("");
   const [prix, setPrix] = useState(0);
+
   const [erreurs, setErreurs] = useState({});
   const [erreurServeur, setErreurServeur] = useState(null);
   const [enCours, setEnCours] = useState(false);
@@ -34,7 +35,9 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
 
   const soumettre = async (event) => {
     event.preventDefault();
+
     setErreurServeur(null);
+    setErreurs({});
 
     const erreursTrouvees = valider();
 
@@ -45,41 +48,61 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
 
     setEnCours(true);
 
-    // Récupérer l'utilisateur connecté
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
 
-    if (!user) {
-      setErreurServeur("Vous devez être connecté.");
-      setEnCours(false);
-      return;
-    }
+      if (!user) {
+        throw new Error("Vous devez être connecté.");
+      }
 
-    const { error } = await supabase
-      .from("evenements")
-      .insert({
-        titre: titre.trim(),
-        categorie,
-        lieu_nom: lieu.trim(),
-        prix: Number(prix),
-        date_debut: new Date().toISOString(),
-        organisateur_id: user.id,
-      });
+      // Image automatique selon la catégorie
+      const images = {
+        concert:
+          "https://placehold.co/400x250/1a3a5c/fff?text=Concert",
+        expo:
+          "https://placehold.co/400x250/ea7d2b/fff?text=Expo",
+        conference:
+          "https://placehold.co/400x250/3aa84d/fff?text=Conference",
+        atelier:
+          "https://placehold.co/400x250/cc1f1f/fff?text=Atelier",
+        soutenance:
+          "https://placehold.co/400x250/8a6d10/fff?text=Soutenance",
+      };
 
-    setEnCours(false);
+      const { error } = await supabase
+        .from("evenements")
+        .insert({
+          titre: titre.trim(),
+          categorie,
+          lieu_nom: lieu.trim(),
+          prix: Number(prix),
+          date_debut: new Date().toISOString(),
+          organisateur_id: user.id,
+          image_url: images[categorie],
+        });
 
-    if (error) {
-      setErreurServeur(error.message);
-    } else {
-      onAjoutReussi(); // demande à App de recharger la liste
+      if (error) {
+        throw error;
+      }
+
+      if (onAjoutReussi) {
+        onAjoutReussi();
+      }
+
       navigate("/");
+    } catch (e) {
+      setErreurServeur(e.message);
+    } finally {
+      setEnCours(false);
     }
   };
+
   return (
     <form className={styles.form} onSubmit={soumettre}>
       <h2>Ajouter un événement</h2>
-      
+
       <label className={styles.champ}>
         Titre
         <input
@@ -87,12 +110,19 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
           value={titre}
           onChange={(e) => setTitre(e.target.value)}
         />
-        {erreurs.titre && <span className={styles.erreur}>{erreurs.titre}</span>}
+        {erreurs.titre && (
+          <span className={styles.erreur}>
+            {erreurs.titre}
+          </span>
+        )}
       </label>
 
       <label className={styles.champ}>
         Catégorie
-        <select value={categorie} onChange={(e) => setCategorie(e.target.value)}>
+        <select
+          value={categorie}
+          onChange={(e) => setCategorie(e.target.value)}
+        >
           <option value="concert">Concert</option>
           <option value="expo">Exposition</option>
           <option value="conference">Conférence</option>
@@ -108,7 +138,11 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
           value={lieu}
           onChange={(e) => setLieu(e.target.value)}
         />
-        {erreurs.lieu && <span className={styles.erreur}>{erreurs.lieu}</span>}
+        {erreurs.lieu && (
+          <span className={styles.erreur}>
+            {erreurs.lieu}
+          </span>
+        )}
       </label>
 
       <label className={styles.champ}>
@@ -119,21 +153,26 @@ const NouvelEvenement = ({ onAjoutReussi }) => {
           value={prix}
           onChange={(e) => setPrix(e.target.value)}
         />
-        {erreurs.prix && <span className={styles.erreur}>{erreurs.prix}</span>}
+        {erreurs.prix && (
+          <span className={styles.erreur}>
+            {erreurs.prix}
+          </span>
+        )}
       </label>
-{erreurServeur && (
-  <p className={styles.erreur}>
-    Erreur : {erreurServeur}
-  </p>
-)}
 
-<button
-  type="submit"
-  disabled={enCours}
-  className={styles.bouton}
->
-  {enCours ? "Envoi..." : "Ajouter"}
-</button>
+      {erreurServeur && (
+        <p className={styles.erreur}>
+          Erreur : {erreurServeur}
+        </p>
+      )}
+
+      <button
+        type="submit"
+        disabled={enCours}
+        className={styles.bouton}
+      >
+        {enCours ? "Envoi..." : "Ajouter"}
+      </button>
     </form>
   );
 };
