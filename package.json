@@ -1,0 +1,8 @@
+{
+  "name": "senevent-monorepo",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}
