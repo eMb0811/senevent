@@ -1,0 +1,22 @@
+{
+  "expo": {
+    "name": "SenEvent",
+    "slug": "senevent",
+    "scheme": "senevent",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "resizeMode": "contain",
+      "backgroundColor": "#1a3a5c"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#1a3a5c"
+      }
+    }
+  }
+}
