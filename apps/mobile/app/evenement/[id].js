@@ -6,12 +6,14 @@ import {
   StyleSheet,
   ScrollView,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { getEvenements } from "@senevent/shared";
 
 export default function Detail() {
   const { id } = useLocalSearchParams();
+  const router = useRouter();
   const [evenement, setEvenement] = useState(null);
   const [chargement, setChargement] = useState(true);
 
@@ -65,6 +67,14 @@ export default function Detail() {
           <Text style={styles.label}>Prix</Text>
           <Text style={styles.prix}>{prix}</Text>
         </View>
+
+        {/* Exercice bonus : navigation par code avec useRouter */}
+        <Pressable
+          style={styles.bouton}
+          onPress={() => router.push("/")}
+        >
+          <Text style={styles.boutonTexte}>Retour a la liste</Text>
+        </Pressable>
       </View>
     </ScrollView>
   );
@@ -98,4 +108,18 @@ const styles = StyleSheet.create({
   valeur: { fontSize: 14, color: "#1a3a5c", fontWeight: "600" },
   prix: { fontSize: 16, color: "#ea7d2b", fontWeight: "bold" },
   centre: { textAlign: "center", marginTop: 40 },
+  bouton: {
+    backgroundColor: "#1a3a5c",
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 8,
+    marginTop: 24,
+    alignItems: "center",
+  },
+  boutonTexte: {
+    color: "#fff",
+    fontSize: 15,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
 });
