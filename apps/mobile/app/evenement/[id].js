@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { getEvenements } from "@senevent/shared";
+import BoutonInscription from "../../components/BoutonInscription";
 
 export default function Detail() {
   const { id } = useLocalSearchParams();
@@ -68,7 +69,9 @@ export default function Detail() {
           <Text style={styles.prix}>{prix}</Text>
         </View>
 
-        {/* Exercice bonus : navigation par code avec useRouter */}
+        <BoutonInscription evenementId={evenement.id} />
+
+        {/* Exercice bonus Lab 9 : navigation par code avec useRouter */}
         <Pressable
           style={styles.bouton}
           onPress={() => router.push("/")}
