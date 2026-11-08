@@ -2,12 +2,12 @@ import { createClient } from "@supabase/supabase-js";
 
 export let supabase = null;
 
-export function initSupabase(url, anonKey) {
+export function initSupabase(url, anonKey, options) {
   if (!supabase) {
     if (!url || !anonKey) {
       throw new Error("Variables Supabase manquantes.");
     }
-    supabase = createClient(url, anonKey);
+    supabase = createClient(url, anonKey, options);
   }
   return supabase;
 }
